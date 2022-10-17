@@ -4,10 +4,13 @@
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 
-unsigned long temps;
+using namespace std;
+
 
 unsigned long milis_run;
 unsigned long milis_stopped;
+
+unsigned int number_of_digits = 0;
 
 int switch_pin = 4;
 int button_pin = 6;
@@ -32,9 +35,10 @@ Serial.begin(9600);
   lcd.backlight();
   
   lcd.setCursor(0,0);
-  lcd.print("- Preu classe v1.0 -");
+  lcd.print("- Preu classe v1.2 -");
 
-
+  lcd.setCursor(1, 1); 
+  lcd.print("Cost de la classe");
 
 
 }
@@ -49,37 +53,53 @@ byte contant = digitalRead(switch_pin);
   
   if (contant == LOW) {
     milis_run = millis() - milis_stopped;
-    
-
-
-
-
- 
-  //temps = round(millis()/1000);
   
-  
+    lcd.setCursor(6, 2);
 
-  lcd.setCursor(5, 1); 
-  lcd.print(round(milis_run/1000)); 
+    int centims_total = round(milis_run/3600);
+    int centims = centims_total % 100;
 
-  lcd.setCursor(0, 3);
-  lcd.print("Comptant  ");
+
+
+    lcd.print(centims_total / 100);
+    lcd.print(".");
+
+    if (centims < 10){
+      lcd.print("0");
+    }
+    lcd.print(centims);
+    lcd.print("  EUR");
+
+    lcd.setCursor(0, 3);
+    lcd.print("Comptant...  ");
 
   }
 
   else {
   
     milis_stopped = millis() - milis_run;
-  //Serial.println("Button is not pressed");
   
-  
-  lcd.setCursor(5, 1); 
-  lcd.print(round(milis_run/1000));  
-  
-  lcd.setCursor(0, 3);
-  lcd.print("Aturat  ");
+
+    lcd.setCursor(6, 2);
+
+    int centims_total = round(milis_run/3600);
+    int centims = centims_total % 100;
+
+
+
+    lcd.print(centims_total / 100);
+    lcd.print(".");
+        if (centims < 10){
+      lcd.print("0");
+    }
+    lcd.print(centims);
+    lcd.print("  EUR");
+    
+    lcd.setCursor(0, 3);
+    lcd.print("Aturat...  ");
   }
 
-//delay(100);
+
+delay(10);
 
 }
